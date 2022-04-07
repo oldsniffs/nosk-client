@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nosk</title>
+    <link rel="shortcut icon" href="#" />
+</head>
+<body>
+    <script src="main.js"></script>
+    <h3>Connection Status: <span id='conn_status'>Not Connected</span></h3>
+    <div id="login_div">
+        <div id="credentials">
+            <label for="username">Username:</label>
+            <input autofocus id="username" type="text">
+            <label for="password">Password:</label>
+            <input id="password" type="text">
+            <button id="login_button" name="login">Login</button>
+            <div>
+            </div>
+        </div>
+        <div id="characters">            
+        </div>
+    </div>
+    <button id="more_text">More Text!</button>
+    <div id="game_div">
+        <h2 id="location_name"></h2>
+        <p id="location_description">
+            <span id="items_present"></span>
+            <span id="others_present"></span>
+        </p>
+        <div id="text_display"></div>
+    </div>
+</body>
+
+<!-- Don't use form, just use an input and button that will send data to app server and update dom -->
