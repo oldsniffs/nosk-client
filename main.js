@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function connect() {
         console.log('Opening connection to game server');
-        const websocket = new WebSocket('ws://localhost:8001');   
+        const websocket = new WebSocket('wss://websockets-tutorial.herokuapp.com/');   
 
         // Connection opened
         websocket.addEventListener('open', function (event) {
