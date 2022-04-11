@@ -33,6 +33,7 @@ function display_text(text_display, text) {
 }
 
 function listen_for_broadcasts(websocket) {
+    console.log('now listening for broadcasts from server...')
     websocket.addEventListener("message", ({ data }) => {
         const broadcast = JSON.parse(data);
         switch (broadcast.type) {
