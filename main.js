@@ -34,8 +34,8 @@ function display_text(text_display, text) {
 function listen_for_broadcasts(websocket) {
     websocket.addEventListener("message", ({ data }) => {
         console.log('now listening for broadcasts from server...')
+        console.log(`recieving data ${data}`)
         const broadcast = JSON.parse(data);
-        console.log(`recieving broadcast ${broadcast}`)
         switch (broadcast.type) {
             
             
@@ -127,6 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
             conn_status.innerHTML = "Not Connected"
             conn_status.style.color = 'red'
         })
+
+        console.log
 
         listen_for_broadcasts(websocket)
         // Login tasks have been performed, control can be handed over to the broadcast listener
