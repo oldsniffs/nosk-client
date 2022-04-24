@@ -35,6 +35,7 @@ function listen_for_broadcasts(websocket) {
     websocket.addEventListener("message", ({ data }) => {
         console.log('now listening for broadcasts from server...')
         const broadcast = JSON.parse(data);
+        console.log(`recieving broadcast ${broadcast}`)
         switch (broadcast.type) {
             
             
