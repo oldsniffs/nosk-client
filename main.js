@@ -19,7 +19,6 @@ function show_characters(character_selection, characters) {
 
 // Create game page
 
-
 function display_text(text_display, text) {
     // Slap a new <p> in the text_display div
     const t = document.createElement("p");
@@ -33,11 +32,11 @@ function display_text(text_display, text) {
 }
 
 function listen_for_broadcasts(websocket) {
-    console.log('now listening for broadcasts from server...')
     websocket.addEventListener("message", ({ data }) => {
+        console.log('now listening for broadcasts from server...')
         const broadcast = JSON.parse(data);
         switch (broadcast.type) {
-
+            
             
             case "charsheet":
                 break
@@ -109,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function connect() {
         console.log('Opening connection to game server');
-        const websocket = new WebSocket('wss://websockets-tutorial.herokuapp.com/');   
+        const websocket = new WebSocket('wss://nosk-online.herokuapp.com/');   
 
         // Connection opened
         websocket.addEventListener('open', function (event) {
