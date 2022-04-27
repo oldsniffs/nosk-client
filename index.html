@@ -7,29 +7,39 @@
 </head>
 <body>
     <script src="main.js"></script>
-    <h3>Connection Status: <span id='conn_status'>Not Connected</span></h3>
-    <div id="login_div">
+    <h3>Connection Status: <span style="color:red" id='conn_status'>Not Connected</span></h3>
+    <h3>In game as:<span id="ingame_as"></span></h3>
+
+    <div id="login_screen">
+
+        <!-- Don't use form, just use an input and button that will send data to app server and update dom -->
         <div id="credentials">
             <label for="username">Username:</label>
             <input autofocus id="username" type="text">
             <label for="password">Password:</label>
             <input id="password" type="text">
             <button id="login_button" name="login">Login</button>
-            <div>
-            </div>
-        </div>
-        <div id="characters">            
+            <button id="logout_button" name="logout">Logout</button>
         </div>
     </div>
-    <button id="more_text">More Text!</button>
-    <div id="game_div">
-        <h2 id="location_name"></h2>
+
+    <div id="welcome_screen">
+        <div id="characters">
+            
+        </div>
+        <p></p>
+        <p>Selected Character: <span id="character_selection"></span></p>
+        <button id="submit_character_button">Enter World</button>
+    </div>
+
+    <div id="game_screen" hidden="true">
+        <input id="command_input">
+        <h2 id="location_title"></h2>
         <p id="location_description">
+            <span id="physical_description"></span>
             <span id="items_present"></span>
-            <span id="others_present"></span>
+            <span id="people_present"></span>
         </p>
-        <div id="text_display"></div>
+        <div id="main_text"></div>
     </div>
 </body>
-
-<!-- Don't use form, just use an input and button that will send data to app server and update dom -->
