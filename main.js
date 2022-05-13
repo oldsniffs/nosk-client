@@ -62,24 +62,15 @@ var logout_button
 var submit_character_button
 
 // Game 
-var location_title
-var location_description
-var items_present
-var people_present
+var loc_title
+var loc_phys_dsc
+var loc_items
+var loc_people
 var command_input
 var main_text
 
 var characters = []
-const ingame_character = {
-    "name": "",
-    "location": {
-        "name": "",
-        "default": "",
-        "physical_description": "",
-        "people": [],
-        "items": [],
-    }
-}
+var ingame_character = {}
 
 
 function display_text(text_display, text) {
@@ -219,12 +210,23 @@ function display_location() {
     // show generic in italics, name more noticeable 
     // terrain indicated by...? color? image? small label? color + small side label?
 
-    // Check if name is known
-    location_title.innerHTML = `${ingame_character.location.name} ${ingame_character.location.name}`;
-    console.log()
-    physical_description.innerHTML = ingame_character.location.phys_dsc;
-    items_present.innerHTML = ingame_character.location.items;
-    people_present.innerHTML = ingame_character.location.people;
+    loc = ingame_character.location
+    loc_title.innerHTML = `${loc.name} ${loc.generic}, Region of ${loc.region}`;
+    loc_phys_dsc.innerHTML = loc.phys_dsc;
+    // loc_items.innerHTML = loc.items;
+    // loc_people.innerHTML = loc.people;
+    console.log(loc.exits);
+    // populate exits div
+    // Roads first in blue
+    // make detail expand function so it can be toggled always on
+    // road East (safe) <mouse expand> -> gentle climb toward rough hills
+    loc.exits.forEach( function(exit) {
+        const direction = document.createElement("p");
+        direction.appendChild(docuement.createTextNode(exit.direction))
+        const
+    });
+    
+
 }
 
 function submit_command(e) {
@@ -244,8 +246,7 @@ function submit_command(e) {
 }
 
 function enter_world(websocket, package) {
-    ingame_character.name = package.charsheet.name
-    ingame_character.location = package.charsheet.location
+    ingame_character = package.charsheet
     command_input.addEventListener('keyup', submit_command)
     
     show_game_screen();
@@ -294,10 +295,10 @@ function load_elements() {
     submit_character_button = submit_character_button = document.querySelector('#submit_character_button')
 
     // Game 
-    location_title = document.querySelector("#location_title")
-    location_description = document.querySelector("#location_description")
-    items_present = document.querySelector("#items_present")
-    people_present = document.querySelector("#people_present")
+    loc_title = document.querySelector("#loc_title")
+    loc_phys_dsc = document.querySelector("#loc_phys_dsc")
+    loc_items = document.querySelector("#loc_items")
+    loc_people = document.querySelector("#loc_people")
     command_input = document.querySelector("#command_input")
     main_text = document.querySelector("#main_text")
     
