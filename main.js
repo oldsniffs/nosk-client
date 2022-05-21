@@ -51,12 +51,14 @@ var welcome_screen
 var game_screen
 
 // Always Top
-var conn_status
+var conn_status_display
 var ingame_as
 
 // Login
 var login_button
 var logout_button
+var username_input
+var password_input
 
 // Welcome
 var submit_character_button
@@ -222,8 +224,7 @@ function display_location() {
     // road East (safe) <mouse expand> -> gentle climb toward rough hills
     loc.exits.forEach( function(exit) {
         const direction = document.createElement("p");
-        direction.appendChild(docuement.createTextNode(exit.direction))
-        const
+        direction.appendChild(document.createTextNode(exit.direction))
     });
     
 
@@ -269,42 +270,50 @@ function exit_world() {
 }
 
 function show_login_screen() {
-    switch_to_screen(login_screen)    
+    switch_to_screen(login_screen)   ; 
 }
 
 function switch_to_screen(new_screen) {
-    document.activeElement.blur()
+    document.activeElement.blur();
     current_screen.hidden = true;
     new_screen.hidden = false;
     current_screen = new_screen;
 }
 
-function load_elements() {
-    login_screen = document.querySelector("#login_screen")
-    welcome_screen = document.querySelector("#welcome_screen")
-    game_screen = document.querySelector("#game_screen")
+function init_elements() {
+    login_screen = document.querySelector("#login-screen");
+    welcome_screen = document.querySelector("#welcome-screen");
+    game_screen = document.querySelector("#game-screen");
     // Always Top
-    conn_status = document.querySelector('#conn_status')
-    ingame_as = document.querySelector('#ingame_as')
+    conn_status_display = document.querySelector('#conn_status_display');
+    ingame_as_display = document.querySelector('#ingame_as_display');
+    conn_status_display.innerHTML = "Not Connected";
+    conn_status_display.style.color = "rgb(255, 122, 135)"
+
 
     // Login
-    login_button = document.querySelector('#login_button')
-    logout_button = document.querySelector('#logout_button')
+    login_button = document.querySelector('#login-button');
+    logout_button = document.querySelector('#logout-button');
+    username_input = document.querySelector('#username')
+    password_input = document.querySelector('#password')
+
+    login_button.addEventListener('keyup', function(event) {
+        connect(event);
+    })
 
     // Welcome
-    submit_character_button = submit_character_button = document.querySelector('#submit_character_button')
+    submit_character_button = submit_character_button = document.querySelector('#submit_character_button');
 
     // Game 
-    loc_title = document.querySelector("#loc_title")
-    loc_phys_dsc = document.querySelector("#loc_phys_dsc")
-    loc_items = document.querySelector("#loc_items")
+    loc_title = document.querySelector("#loc_title");
+    loc_phys_dsc = document.querySelector("#loc_phys_dsc");
+    loc_items = document.querySelector("#loc_items");
     loc_people = document.querySelector("#loc_people")
-    command_input = document.querySelector("#command_input")
-    main_text = document.querySelector("#main_text")
+    command_input = document.querySelector("#command_input");
+    main_text = document.querySelector("#main_text");
     
 
-
-    characters = []   
+    characters = [];
 }
 
 function getWebSocketServer() {
@@ -320,10 +329,12 @@ function getWebSocketServer() {
     return ws_server
 }
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // Get elements
 
-    load_elements()
+    init_elements()
     
     welcome_screen.hidden = true;
     game_screen.hidden = true;
@@ -332,18 +343,32 @@ document.addEventListener('DOMContentLoaded', () => {
     login_button.disabled = false;
     logout_button.disabled = true;
 
-    document.querySelector('#login_button').addEventListener("click", function() {
+
+    document.querySelector('#login-button').addEventListener("click", function() {
         connect()
     })
+    username_input.addEventListener("keyup", function(event) {
+        console.log(`keyup ${event.code} on username`)
+        if (event.code === 'Enter') {
+            connect()
+        }
+    });
+    password_input.addEventListener("keyup", function(event) {
+        console.log(`keyup ${event.code} on password`)
+        if (event.code === 'Enter') {
+            connect()
+        }
+    });
+
 
     function connect() {
         console.log('Opening connection to game server');
         websocket = new WebSocket(getWebSocketServer());  
-
+    
         // Connection opened
         websocket.addEventListener('open', function (event) {
-            conn_status.innerHTML = "Connected"
-            conn_status.style.color = 'green'
+            conn_status_display.innerHTML = "Connected";
+            conn_status_display.style.color = 'rgb(133,255,122)';
             
             let username = document.querySelector('#username').value;
             let password = document.querySelector('#password').value;
@@ -352,27 +377,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             login_button.disabled = true;
             logout_button.disabled = false;
-
+    
         });
-
+    
         // Connection closed
         websocket.addEventListener('close', function (event) {
-            conn_status.innerHTML = "Not Connected"
-            conn_status.style.color = 'red'
+            conn_status_display.innerHTML = "Not Connected"
+            conn_status_display.style.color = 'rgb(255, 122, 135)'
             logout_button.disabled = true;
             login_button.disabled = false;
             switch_to_screen(login_screen)
             exit_world()
         })
-
+    
         listen_for_broadcasts(websocket)
         // Login tasks have been performed, control can be handed over to the broadcast listener
-
-    };
     
-
-
-    // Listen for messages
-    // websocket.addEventListener('message')
+    };
 
 })

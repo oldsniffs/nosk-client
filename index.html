@@ -1,47 +1,234 @@
+<!-- top bar transparency, but not for it's left and ride lodged components -->
+
+
 <!DOCTYPE html> 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Nosk</title>
-    <link rel="shortcut icon" href="#" />
-</head>
-<body>
     <script src="main.js"></script>
-    <h3>Connection Status: <span style="color:red" id='conn_status'>Not Connected</span></h3>
-    <h3>In game as:<span id="ingame_as"></span></h3>
+    <link rel="shortcut icon" href="#" />
 
-    <div id="login_screen">
 
-        <!-- Don't use form, it refreshes page
-        Use an input and button that will send data to app server and update dom -->
-        <div id="credentials">
+<style>
+    :root {
+        --soft_purple: rgb(122, 133, 225);
+        --dark_purple: rgb(44, 48, 83);
+        --pale_peach: rgb(249, 220, 167);
+        --button_background: rgb(236, 222, 167);
+        --button_hover_color: rgb(128, 117, 73);
+        
+        
+        --background-color: black; 
+        --classic-text: rgb(102, 239, 218);
+        
+        --text-color: #fff8d6;
+        --shadow-color: #9666EF;
+        
+        --donations_message: "The game is free and funded only by donations.";
+
+        
+        /* temp visual aid border */
+        --visaid: 2px dashed rgb(30, 28, 37);
+        
+    }
+    
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+
+        font-family:monospace;
+        background:var(--background-color);
+        color:var(--text-color);
+    }
+
+    .center-span {
+        text-align: center;
+    }
+
+    #top_bar {
+        /* justify-content: space-between; */
+        /* Accounts for border and padding in height */
+        box-sizing: border-box; 
+        margin: 0px;        
+        position:absolute;
+    }
+
+    #status-box {
+        border:var(--visaid);
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    #main_text {
+        min-height: 400px;
+        overflow: scroll;
+    }
+
+    .command-input {
+        border-left: 0px;
+        border-top: 0px;
+        border-right: 0px;
+        border-bottom: 2px solid var(--text-color);
+    }
+
+    .entry-div input {
+        border-left: 0px;
+        border-top: 0px;
+        border-right: 0px;
+        border-bottom: 2px solid var(--text-color);
+        outline:none;
+        margin-top:4px;
+        margin-bottom:4px;
+        background:var(--background-color);
+        color: var(--text-color);
+        font-size: 14px;
+    }
+
+    .box {
+        display:block;
+        /* temmp border for visual aid */
+        border:var(--visaid);
+        font-size:14px;
+    }
+
+    #location-box {
+        max-width: 50%;
+    }
+
+    #login-box {
+        position:relative;
+        text-align:center;
+    }
+
+    .glow-button {
+        margin-top:6px;
+        color:black;
+        font-size: 40px;
+        filter:drop-shadow(0px 0px 4px var(--shadow-color));
+    }
+
+    .glow-button:hover {
+        filter:drop-shadow(0px 0px 4px rgb(96, 96, 255));
+        /* color:black; */
+    }
+
+    /* Game Screen */
+
+    #command-input {
+        border-left: 0px;
+        border-top: 0px;
+        border-right: 0px;
+        border-bottom: 2px solid var(--text-color);
+        outline:none;
+        margin-top:4px;
+        margin-bottom:4px;
+        background:var(--background-color);
+        color: var(--text-color);
+        font-size: 14px;
+    }
+
+    .rounded-button {
+        display:inline-block;
+        width: 80px;
+        border: 3px solid black;
+        border-radius: 30%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-right: 4px;
+        padding-left: 4px;
+        /* the padding oddness with a % radius stretches out the radius shape because each side's curve px is based on it's padding*/
+        margin-top: 2px;
+        margin-bottom: 2px;
+        background: var(--button_background);
+        color: black;
+        text-align:center;
+    }
+
+    .rounded-button:hover {
+        border: 3px solid black;
+        background: var(--button_hover_color);
+    }
+
+    #main-background {
+        position: absolute;
+        height: 100%;
+        width:100%;
+        background:grey;
+        opacity: .5;
+    }
+
+</style>
+</head>
+
+<div id="main-background">
+
+
+</div>
+
+<!-- Placeholds topbar items but should be invisible and do nothing itself -->
+<div id='top_bar'>      
+    <div id=nav></div>
+
+    <div class='box' id="status-box">
+        <div id="conn_status">
+            <div id="conn_status_label" style="display:inline-block; ">Connection Status:</div>
+            <div id="conn_status_display" style="display:inline-block; margin: 2px;"></div>
+        </div>
+
+        <div id="ingame_as">
+            <div id="ingame_as_label" style="margin: 2px;">In-game As:</div>
+            <div id="ingame_as_display" style="margin: 2px;"div></div>
+        </div>
+    </div>
+
+</div>
+
+<div id="login-screen">
+
+    <div class='box' id = "login-box">
+    <span class='center-span'>
+        <div class="entry-div">
             <label for="username">Username:</label>
             <input autofocus id="username" type="text">
+        </div>
+        <div class="entry-div">
             <label for="password">Password:</label>
-            <input id="password" type="text">
-            <button id="login_button" name="login">Login</button>
-            <button id="logout_button" name="logout">Logout</button>
+            <input id="password" type="password">
         </div>
+        <div class="glow-button" id="login-button">Login</div>
+        <div class="glot-button" id="logout-button" style="display:none">Logout</div>
+    </span>
     </div>
 
-    <div id="welcome_screen">
-        <div id="characters">
-            
-        </div>
-        <p></p>
-        <p>Selected Character: <span id="character_selection"></span></p>
-        <button id="submit_character_button">Enter World</button>
-    </div>
+    
 
-    <div id="game_screen" hidden="true">
-        <input id="command_input">
-        <h2 id="loc_title"></span><span id="loc_name"></span><span id="loc_generic"><span id="loc_region"></span></h2>
-        <p id="loc_description">
-            <span id="loc_phys_dsc"></span>
-            <span id="loc_items"></span><span id="selected_item_dsc"></span>
-            <span id="loc_people"></span<span id="selected_person_dsc"></span>>
-            <span id="loc_exits"></span><span id="selected_exit_dsc"></span>
-        </p>
-        <div id="main_text"></div>
+</div>
+
+<div id="welcome-screen" hidden="true">
+    <div id="characters">
+        
     </div>
+    <p></p>
+    <p>Selected Character: <span id="character_selection"></span></p>
+    <button id="submit_character_button">Enter World</button>
+</div>
+
+<div id="game-screen" hidden="true">
+    <div id="location-box">
+    <h2 id="loc_title"></span><span id="loc_name"></span><span id="loc_generic"><span id="loc_region"></span></h2>
+    <p id="loc_description">
+        <span id="loc_phys_dsc"></span>
+        <span id="loc_items"></span><span id="selected_item_dsc"></span>
+        <span id="loc_people"></span<span id="selected_person_dsc"></span>>
+        <span id="loc_exits"></span><span id="selected_exit_dsc"></span>
+    </p>
+    <input id="command_input">
+    <div id="main_text"></div>
+    </div>
+    
+</div>
+
 </body>
