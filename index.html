@@ -9,170 +9,14 @@
     <title>Nosk</title>
     <script src="main.js"></script>
     <link rel="shortcut icon" href="#" />
-
-
-<style>
-    :root {
-        --soft_purple: rgb(122, 133, 225);
-        --dark_purple: rgb(44, 48, 83);
-        --pale_peach: rgb(249, 220, 167);
-        --button_background: rgb(236, 222, 167);
-        --button_hover_color: rgb(128, 117, 73);
-        
-        
-        --background-color: black; 
-        --classic-text: rgb(102, 239, 218);
-        
-        --text-color: #fff8d6;
-        --shadow-color: #9666EF;
-        
-        --donations_message: "The game is free and funded only by donations.";
-
-        
-        /* temp visual aid border */
-        --visaid: 2px dashed rgb(30, 28, 37);
-        
-    }
-    
-    html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0px;
-
-        font-family:monospace;
-        background:var(--background-color);
-        color:var(--text-color);
-    }
-
-    .center-span {
-        text-align: center;
-    }
-
-    #top_bar {
-        /* justify-content: space-between; */
-        /* Accounts for border and padding in height */
-        box-sizing: border-box; 
-        margin: 0px;        
-        position:absolute;
-    }
-
-    #status-box {
-        border:var(--visaid);
-        font-size: 14px;
-        white-space: nowrap;
-    }
-
-    #main_text {
-        min-height: 400px;
-        overflow: scroll;
-    }
-
-    .command-input {
-        border-left: 0px;
-        border-top: 0px;
-        border-right: 0px;
-        border-bottom: 2px solid var(--text-color);
-    }
-
-    .entry-div input {
-        border-left: 0px;
-        border-top: 0px;
-        border-right: 0px;
-        border-bottom: 2px solid var(--text-color);
-        outline:none;
-        margin-top:4px;
-        margin-bottom:4px;
-        background:var(--background-color);
-        color: var(--text-color);
-        font-size: 14px;
-    }
-
-    .box {
-        display:block;
-        /* temmp border for visual aid */
-        border:var(--visaid);
-        font-size:14px;
-    }
-
-    #location-box {
-        max-width: 50%;
-    }
-
-    #login-box {
-        position:relative;
-        text-align:center;
-    }
-
-    .glow-button {
-        margin-top:6px;
-        color:black;
-        font-size: 40px;
-        filter:drop-shadow(0px 0px 4px var(--shadow-color));
-    }
-
-    .glow-button:hover {
-        filter:drop-shadow(0px 0px 4px rgb(96, 96, 255));
-        /* color:black; */
-    }
-
-    /* Game Screen */
-
-    #command-input {
-        border-left: 0px;
-        border-top: 0px;
-        border-right: 0px;
-        border-bottom: 2px solid var(--text-color);
-        outline:none;
-        margin-top:4px;
-        margin-bottom:4px;
-        background:var(--background-color);
-        color: var(--text-color);
-        font-size: 14px;
-    }
-
-    .rounded-button {
-        display:inline-block;
-        width: 80px;
-        border: 3px solid black;
-        border-radius: 30%;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        padding-right: 4px;
-        padding-left: 4px;
-        /* the padding oddness with a % radius stretches out the radius shape because each side's curve px is based on it's padding*/
-        margin-top: 2px;
-        margin-bottom: 2px;
-        background: var(--button_background);
-        color: black;
-        text-align:center;
-    }
-
-    .rounded-button:hover {
-        border: 3px solid black;
-        background: var(--button_hover_color);
-    }
-
-    #main-background {
-        position: absolute;
-        height: 100%;
-        width:100%;
-        background:grey;
-        opacity: .5;
-    }
-
-</style>
+    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
-<div id="main-background">
 
-
-</div>
-
-<!-- Placeholds topbar items but should be invisible and do nothing itself -->
 <div id='top_bar'>      
     <div id=nav></div>
-
-    <div class='box' id="status-box">
+    
+    <div id="status-box" class='box'>
         <div id="conn_status">
             <div id="conn_status_label" style="display:inline-block; ">Connection Status:</div>
             <div id="conn_status_display" style="display:inline-block; margin: 2px;"></div>
@@ -186,10 +30,11 @@
 
 </div>
 
+<div id="temp-aesthetic-spacing" style="color:transparent"><p>fresh</p></div>
+
 <div id="login-screen">
 
     <div class='box' id = "login-box">
-    <span class='center-span'>
         <div class="entry-div">
             <label for="username">Username:</label>
             <input autofocus id="username" type="text">
@@ -200,14 +45,13 @@
         </div>
         <div class="glow-button" id="login-button">Login</div>
         <div class="glot-button" id="logout-button" style="display:none">Logout</div>
-    </span>
     </div>
 
     
 
 </div>
 
-<div id="welcome-screen" hidden="true">
+<div id="welcome-screen" hidden="true" style="text-align: center;">
     <div id="characters">
         
     </div>
@@ -217,6 +61,7 @@
 </div>
 
 <div id="game-screen" hidden="true">
+    
     <div id="location-box">
     <h2 id="loc_title"></span><span id="loc_name"></span><span id="loc_generic"><span id="loc_region"></span></h2>
     <p id="loc_description">
@@ -225,10 +70,9 @@
         <span id="loc_people"></span<span id="selected_person_dsc"></span>>
         <span id="loc_exits"></span><span id="selected_exit_dsc"></span>
     </p>
-    <input id="command_input">
-    <div id="main_text"></div>
-    </div>
-    
+    <input id="command-input">
+    <div id="main-text"></div>
 </div>
+
 
 </body>

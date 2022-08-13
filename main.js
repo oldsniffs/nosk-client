@@ -185,26 +185,33 @@ function show_welcome_screen(websocket) {
         console.log(`submit character ${selected_character} for world entry`)
         websocket.send(selected_character);
     }
-    
+
     function select_character(char_name) {
         submit_character_button.disabled = false;
         character_selection.innerHTML = char_name;
-        submit_character_button.addEventListener("click", function() {
-            submit_character(char_name)
-        })
+        // This is wrong. Can add this listener earlier
+        console.log()
+        submit_character_button.addEventListener("click", function submit_handler() {
+            this.removeEventListener('click', submit_handler);
+            submit_character(char_name);
+            
+        });
     }
 
     // repopulate characters div
     console.log(characters)
     characters.forEach(function(character) {
-        // add a p to character list
-        // char name clickable to send choice to server
         const c = document.createElement("p");
         c.appendChild(document.createTextNode(character));
+        c.style.color = 'teal';
         characters_div.insertAdjacentElement("beforeend", c);
+        
+        // Make name clickable to select choice
         c.addEventListener("click", function() {
-            select_character(c.innerHTML)
+            console.log('click')
+            select_character(c.innerHTML)            
         });
+        console.log(`added ${character} to characters div`);
     })
 }
 
@@ -302,15 +309,15 @@ function init_elements() {
     })
 
     // Welcome
-    submit_character_button = submit_character_button = document.querySelector('#submit_character_button');
+    submit_character_button = document.querySelector('#submit_character_button');
 
     // Game 
     loc_title = document.querySelector("#loc_title");
     loc_phys_dsc = document.querySelector("#loc_phys_dsc");
     loc_items = document.querySelector("#loc_items");
     loc_people = document.querySelector("#loc_people")
-    command_input = document.querySelector("#command_input");
-    main_text = document.querySelector("#main_text");
+    command_input = document.querySelector("#command-input");
+    main_text = document.querySelector("#main-text");
     
 
     characters = [];
