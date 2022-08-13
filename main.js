@@ -73,6 +73,7 @@ var main_text
 
 var characters = []
 var ingame_character = {}
+var selected_character
 
 
 function display_text(text_display, text) {
@@ -176,26 +177,27 @@ function show_welcome_screen(websocket) {
 
     const characters_div = document.querySelector('#characters')
     const character_selection = document.querySelector('#character_selection')
-    submit_character_button.disabled = true;
     characters_div.innerHTML = ""
-    character_selection.innerHTML = ""
-    
-    
-    function submit_character(selected_character) {
+    character_selection.innerHTML = ""    
+    selected_character = ""
+    submit_character_button.disabled = true;
+
+    function submit_character(handler) {
         console.log(`submit character ${selected_character} for world entry`)
         websocket.send(selected_character);
+        submit_character_button.removeEventListener('click', handler);
     }
 
     function select_character(char_name) {
         submit_character_button.disabled = false;
         character_selection.innerHTML = char_name;
+        selected_character = char_name;
         // This is wrong. Can add this listener earlier
-        console.log()
         submit_character_button.addEventListener("click", function submit_handler() {
-            this.removeEventListener('click', submit_handler);
-            submit_character(char_name);
-            
+            submit_character(submit_handler);
         });
+
+
     }
 
     // repopulate characters div
@@ -253,7 +255,8 @@ function submit_command(e) {
     }
 }
 
-function enter_world(websocket, package) {
+function enter_world(websocket, package) {    
+    submit_character_button.disabled = true
     ingame_character = package.charsheet
     command_input.addEventListener('keyup', submit_command)
     
