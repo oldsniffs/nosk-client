@@ -76,16 +76,24 @@ var ingame_character = {}
 var selected_character
 
 
-function display_text(broadcast) {
-    // Slap a new <p> in the text_display div
-    const t = document.createElement("p");
-    t.appendChild(document.createTextNode(text))
-    main_text.insertAdjacentElement("afterbegin", t);
+function display_main_text(messages) {
+    messages.forEach( function(message) {
 
-    // Parse colors, links
+        // Slap a new <p> in the text_display div
+        const t = document.createElement("p");
+        t.appendChild(document.createTextNode(text))
+        main_text.insertAdjacentElement("afterbegin", t);        
+        // Parse colors, clickable links
+
+    })
 
     // Could remove content past a certain size to a buffer / storage zone
     // In other words limit the scrollable area but keep the excess handy
+
+    // Should interpret 
+    // Ex 
+    // You start walking north >
+    // [result]
 }
 
 
@@ -95,34 +103,37 @@ function listen_for_broadcasts(websocket) {
     websocket.addEventListener("message", ({ data }) => {
         console.log(`recieving data ${data}`)
         const broadcast = JSON.parse(data);
-        switch (broadcast.b_type) {    
+        broadcast.contents.forEach(function(broadcast_content) {
+            console.log(`case for ${broadcast_content}`)
+            switch (broadcast_content) {    
+                
+                case "welcome":
+                    characters = broadcast.characters
+                    show_welcome_screen(websocket)
+                    break
             
-            case "welcome":
-                characters = broadcast.characters
-                show_welcome_screen(websocket)
-                break
-        
-            case "entrance_package":
-                enter_world(websocket, broadcast)
-                break
+                case "entrance_package":
+                    enter_world(websocket, broadcast)
+                    break
 
-            case "location_status":
-                update_location(broadcast)
-                break
-            
-            case "charsheet":
-                update_charsheet(broadcast)
-                break
+                case "location_update":
+                    ingame_character.location = broadcast.location_data
+                    display_location(broadcast)
+                    break
+                
+                case "charsheet":
+                    update_charsheet(broadcast)
+                    break
 
-            case "display_text":
-                // Should interpret 
-                // Ex 
-                // You start walking north >
-                // [result]
-                display_text(broadcast)
-                break
+                case "main_text_messages":
+                    display_main_text(broadcast.messages)
+                    break
 
-        }
+                case "action_response":
+                    display_main_text(broadcast.messages)
+                    break
+            }
+        });
     });
 }
 
@@ -225,6 +236,7 @@ function show_welcome_screen(websocket) {
     })
 }
 
+
 function display_location() {
     // show generic in italics, name more noticeable 
     // terrain indicated by...? color? image? small label? color + small side label?
@@ -271,7 +283,7 @@ function submit_command(e) {
         if (command != false) {
             transmission = {
                 "type": "action_command",
-                "contents": command,
+                "command": command,
             }
             send_transmission(websocket, transmission)
         }
@@ -291,7 +303,7 @@ function enter_world(websocket, package) {
     // Display messages
     let messages = package.messages
     messages.forEach(function(message) {
-        display_text(message);
+        display_main_text(message);
     });
     
 }
