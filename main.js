@@ -76,7 +76,7 @@ var ingame_character = {}
 var selected_character
 
 
-function display_text(text_display, text) {
+function display_text(broadcast) {
     // Slap a new <p> in the text_display div
     const t = document.createElement("p");
     t.appendChild(document.createTextNode(text))
@@ -112,6 +112,14 @@ function listen_for_broadcasts(websocket) {
             
             case "charsheet":
                 update_charsheet(broadcast)
+                break
+
+            case "display_text":
+                // Should interpret 
+                // Ex 
+                // You start walking north >
+                // [result]
+                display_text(broadcast)
                 break
 
         }
@@ -226,17 +234,32 @@ function display_location() {
     loc_phys_dsc.innerHTML = loc.phys_dsc;
     // loc_items.innerHTML = loc.items;
     // loc_people.innerHTML = loc.people;
-    console.log(loc.exits);
+    
+    // debugging
+    console.log(`current location xy: ${loc.x}, ${loc.y}`)
+
     // populate exits div
+
     // Roads first in blue
     // make detail expand function so it can be toggled always on
     // road East (safe) <mouse expand> -> gentle climb toward rough hills
-    loc.exits.forEach( function(exit) {
-        const direction = document.createElement("p");
-        direction.appendChild(document.createTextNode(exit.direction))
-    });
-    
 
+    console.log(loc.exits)
+    loc_exits.innerHTML = ""
+    isFirst = true;
+    loc.exits.forEach( function(exit) {
+        const direction = document.createElement("span");
+        if (isFirst == true) {
+            direction.innerHTML = exit.direction;
+            isFirst = false;
+        } else {
+            direction.innerHTML = ", ".concat(exit.direction);
+        }
+        
+        // direction.innerHTML = exit.direction;
+        loc_exits.insertAdjacentElement("beforeend", direction);
+    });
+            
 }
 
 function submit_command(e) {
@@ -315,10 +338,11 @@ function init_elements() {
     submit_character_button = document.querySelector('#submit_character_button');
 
     // Game 
-    loc_title = document.querySelector("#loc_title");
-    loc_phys_dsc = document.querySelector("#loc_phys_dsc");
-    loc_items = document.querySelector("#loc_items");
-    loc_people = document.querySelector("#loc_people")
+    loc_title = document.querySelector("#loc-title");
+    loc_phys_dsc = document.querySelector("#loc-phys_dsc");
+    loc_exits = document.querySelector("#loc-exits")
+    loc_items = document.querySelector("#loc-items");
+    loc_people = document.querySelector("#loc-people")
     command_input = document.querySelector("#command-input");
     main_text = document.querySelector("#main-text");
     
