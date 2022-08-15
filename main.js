@@ -409,13 +409,18 @@ function init_elements() {
 
 function getWebSocketServer() {
     var ws_server
-    if (window.location.host == "oldsniffs.github.io") {
-        ws_server = "wss://nosk-online.herokuapp.com/";
-    } else if (window.location.host == "localhost:8000") {
+    // if (window.location.host == "oldsniffs.github.io") {
+    //     ws_server = "wss://nosk-online.herokuapp.com/";
+    // } else 
+    if (window.location.host == "localhost:8000") {
         ws_server = "ws://localhost:8001/";
     } else {
-        throw new Error(`Unsupported host: ${window.location.host}`);
+        ws_server = "wss://nosk-online.herokuapp.com/";
     }
+
+
+    //     throw new Error(`Unsupported host: ${window.location.host}`);
+    // }
     console.log(`Using Websocket Server: ${ws_server} for Host ${window.location.host}`)
     return ws_server
 }
