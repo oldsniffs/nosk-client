@@ -409,7 +409,7 @@ function init_elements() {
 
 function getWebSocketServer() {
     var ws_server
-    if (window.location.host == "https://oldsniffs.github.io/nosk-client/") {
+    if (window.location.host == "oldsniffs.github.io") {
         ws_server = "wss://nosk-online.herokuapp.com/";
     } else if (window.location.host == "localhost:8000") {
         ws_server = "ws://localhost:8001/";
