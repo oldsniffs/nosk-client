@@ -9,7 +9,7 @@ const PLAYER_VERBS = [
 
 const WORLD_VERBS = [
     '"', "'", "!", "?",
-    'go', 'n','north','s','south','e','east','w','west',
+    'go', 'n','north','northeast','ne','northwest','nw','s','south','southeast','se','southweat','sw','e','east','w','west',
     'speak', 'yell',
     'look',
     'survey',
@@ -81,7 +81,7 @@ function display_main_text(messages) {
 
         // Slap a new <p> in the text_display div
         const t = document.createElement("p");
-        t.appendChild(document.createTextNode(text))
+        t.appendChild(document.createTextNode(message))
         main_text.insertAdjacentElement("afterbegin", t);        
         // Parse colors, clickable links
 
@@ -118,7 +118,7 @@ function listen_for_broadcasts(websocket) {
 
                 case "location_update":
                     ingame_character.location = broadcast.location_data
-                    display_location(broadcast)
+                    location_update(broadcast)
                     break
                 
                 case "charsheet":
@@ -179,10 +179,55 @@ function parse_command(input) {
         console.log("we don't accept more than 2 words yet")
         return false
     }
-
+    
+    
+    if (['go', 'n','north','northeast','ne','northwest','nw','s','south','southeast','se','southweat','sw','e','east','w','west',].includes(command.verb)) {
+        command = clean_go(command)
+    }    
+    
     console.log(`created this command ${command.verb} ${command.target}`)
-    return command        
+    return command      
 }
+
+function clean_go(command) {
+    
+    if (command.verb=='n' || command.verb=='north') {        
+        command.target='north'
+    }     
+    else if (command.verb=='ne' || command.verb=='northeast') {
+        command.target='northeast'
+    }    
+    else if (command.verb=='nw' || command.verb=='northwest') {
+        command.target='northwest'
+    }    
+    else if (command.verb=='s' || command.verb=='south') {
+        command.target='south'
+    }    
+    else if (command.verb=='se' || command.verb=='southeast') {
+        command.target='southeast'
+    }    
+    else if (command.verb=='sw' || command.verb=='southwest') {
+        command.target='southwest'
+    }    
+    else if (command.verb=='e' || command.verb=='east') {
+        command.target='east'
+    }    
+    else if (command.verb=='w' || command.verb=='west') {
+        command.target='west'
+    }    
+    // Special Exits?
+    
+    // No target
+    else {
+        if (command.target=='') {
+            command.target='no travel destination'
+        }
+    }
+    
+    command.verb="travel"
+    return command
+}
+
 
 // View the characters
 // Send one to the server
@@ -237,7 +282,7 @@ function show_welcome_screen(websocket) {
 }
 
 
-function display_location() {
+function location_update() {
     // show generic in italics, name more noticeable 
     // terrain indicated by...? color? image? small label? color + small side label?
 
@@ -296,7 +341,7 @@ function enter_world(websocket, package) {
     command_input.addEventListener('keyup', submit_command)
     
     show_game_screen();
-    display_location();
+    location_update();
     
     // Activate command input
     
