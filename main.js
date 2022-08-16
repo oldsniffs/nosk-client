@@ -478,10 +478,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Connection closed
         websocket.addEventListener('close', function (event) {
+            display_main_text([`Disconnected at ${date.toLocaleTimeString()}`])
             conn_status_display.innerHTML = "Not Connected"
             conn_status_display.style.color = 'rgb(255, 122, 135)'
             logout_button.disabled = true;
             login_button.disabled = false;
+            var date = new Date()            
             switch_to_screen(login_screen)
             exit_world()
         })
