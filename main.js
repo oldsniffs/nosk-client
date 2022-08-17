@@ -1,11 +1,9 @@
 // These relate to Server App's verbs.py
 const PLAYER_VERBS = [
-    'eat',
-    'drink',
     'i', 'inventory', 'inv',
     'friends',
-    'drop' // inventory -> environment
 ]
+
 
 const WORLD_VERBS = [
     '"', "'", "!", "?",
@@ -14,6 +12,9 @@ const WORLD_VERBS = [
     'look',
     'survey',
     'pickup', // environment - > inventory
+    'drop', // inventory -> environment
+    'eat',
+    'drink',
 ]
 
 const DENIZEN_INTERACTION_VERBS = [
@@ -68,6 +69,7 @@ var loc_title
 var loc_phys_dsc
 var loc_items
 var loc_people
+var loc_creature
 var command_input
 var main_text
 
@@ -137,6 +139,8 @@ function listen_for_broadcasts(websocket) {
     });
 }
 
+
+
 // Transmissions are game related
 function send_transmission(websocket, transmission) {
     websocket.send(JSON.stringify(transmission));
@@ -148,6 +152,29 @@ function show_game_screen(websocket) {
     // Setup
     switch_to_screen(game_screen)
     command_input.focus()
+}
+
+// Surely, the use of this function to check for "Enter" keyup is not optimal
+function submit_command(e) {
+    if (e.code === "Enter") {
+        command = parse_command(command_input.value)
+        // if command valid
+        command_input.value = ""
+        
+        if (command != false) {
+            transmission = {
+                "type": "action_command",
+                "command": command,
+            }
+            send_transmission(websocket, transmission)
+        }
+    }
+}
+
+function validate_target(command) {
+    // Confirm that target is available and germane to the verb
+
+    if (ALL_VERBS.includes())
 }
 
 function parse_command(input) {
@@ -290,7 +317,7 @@ function location_update() {
     loc_title.innerHTML = `${loc.name} ${loc.generic}, Region of ${loc.region}`;
     loc_phys_dsc.innerHTML = loc.phys_dsc;
     // loc_items.innerHTML = loc.items;
-    // loc_people.innerHTML = loc.people;
+    // loc_denizens.innerHTML = loc.people
     
     // debugging
     console.log(`current location xy: ${loc.x}, ${loc.y}`)
@@ -317,22 +344,6 @@ function location_update() {
         loc_exits.insertAdjacentElement("beforeend", direction);
     });
             
-}
-
-function submit_command(e) {
-    if (e.code === "Enter") {
-        command = parse_command(command_input.value)
-        // if command valid
-        command_input.value = ""
-        
-        if (command != false) {
-            transmission = {
-                "type": "action_command",
-                "command": command,
-            }
-            send_transmission(websocket, transmission)
-        }
-    }
 }
 
 function enter_world(websocket, package) {    
@@ -478,12 +489,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Connection closed
         websocket.addEventListener('close', function (event) {
+            var date = new Date()            
             display_main_text([`Disconnected at ${date.toLocaleTimeString()}`])
             conn_status_display.innerHTML = "Not Connected"
             conn_status_display.style.color = 'rgb(255, 122, 135)'
             logout_button.disabled = true;
             login_button.disabled = false;
-            var date = new Date()            
             switch_to_screen(login_screen)
             exit_world()
         })
