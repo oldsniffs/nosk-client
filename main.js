@@ -174,7 +174,7 @@ function submit_command(e) {
 function validate_target(command) {
     // Confirm that target is available and germane to the verb
 
-    if (ALL_VERBS.includes())
+    if (ALL_VERBS.includes()){}
 }
 
 function parse_command(input) {
