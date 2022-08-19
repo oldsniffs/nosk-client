@@ -133,6 +133,8 @@ function listen_for_broadcasts(websocket) {
                     display_main_text(broadcast.messages)
                     break
 
+                // Probably not needed
+                // Would just redundantly package other cases afaict 
                 case "action_response":
                     display_main_text(broadcast.messages)
                     break
@@ -163,7 +165,7 @@ function submit_command(e) {
         // if command valid
         command_input.value = ""
         
-        if (command != false) {
+        if (command != false && validate_target(command) == true) {
             transmission = {
                 "type": "action_command",
                 "command": command,
@@ -173,10 +175,30 @@ function submit_command(e) {
     }
 }
 
+// Handle bad user inputs here? Seems appropriate for now
 function validate_target(command) {
     // Confirm that target is available and germane to the verb
 
-    if (ALL_VERBS.includes()){}
+    if (command.verb == 'look') {
+    }
+    else if (command.verb == 'travel') {
+        console.log(ingame_character.location.exits)
+        if (command.target==''){
+            display_main_text(['Go where?'])
+            return false
+        }
+
+        let exit_names = ingame_character.location.exits.map(function (exit) {
+            return exit.direction
+        });
+        console.log(exit_names)
+        console.log(command.target)
+        if (!exit_names.includes(command.target)) {
+            display_main_text([`There is no where to go ${command.target}`])
+            return false            
+        }
+    }
+    return true
 }
 
 function parse_command(input) {
@@ -211,14 +233,14 @@ function parse_command(input) {
     
     
     if (['go', 'n','north','northeast','ne','northwest','nw','s','south','southeast','se','southweat','sw','e','east','w','west',].includes(command.verb)) {
-        command = clean_go(command)
+        command = clean_travel(command)
     }    
     
     console.log(`created this command ${command.verb} ${command.target}`)
     return command      
 }
 
-function clean_go(command) {
+function clean_travel(command) {
     
     if (command.verb=='n' || command.verb=='north') {        
         command.target='north'
@@ -244,15 +266,8 @@ function clean_go(command) {
     else if (command.verb=='w' || command.verb=='west') {
         command.target='west'
     }    
-    // Special Exits?
-    
-    // No target
-    else {
-        if (command.target=='') {
-            command.target='no travel destination'
-        }
-    }
-    
+    // Special Exits? catch for first few letters??? autofill ? (tab to complete suggestion?)
+        
     command.verb="travel"
     return command
 }
@@ -349,6 +364,8 @@ function location_update() {
 }
 
 function enter_world(websocket, package) {    
+    var date = new Date()  
+    display_main_text([`Joined world at ${date.toLocaleTimeString()}`]);
     ingame = true
     submit_character_button.disabled = true
     ingame_character = package.charsheet
@@ -422,6 +439,7 @@ function init_elements() {
     loc_people = document.querySelector("#loc-people")
     command_input = document.querySelector("#command-input");
     main_text = document.querySelector("#main-text");
+    dialog_text = document.querySelector("#dialog-text");
     
 
     characters = [];

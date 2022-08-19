@@ -50,18 +50,6 @@ html, body {
     white-space: nowrap;
 }
 
-#main-text {
-    min-height: 400px;
-    overflow: auto;
-}
-
-.command-input {
-    border-left: 0px;
-    border-top: 0px;
-    border-right: 0px;
-    border-bottom: 2px solid var(--text-color);
-}
-
 .entry-div input {
     border-left: 0px;
     border-top: 0px;
@@ -83,12 +71,40 @@ html, body {
     font-size:14px;
 }
 
-#location-box {
-    /* position: relative; */
+#game-main-display {
     width: 80%;
     padding-left: 10%;
     padding-right: 10%;
-    text-align: auto;
+
+}
+
+#location-box {
+    /* position: relative; */
+    width: 100%;
+    max-width: 800px;
+}
+
+#main-text {
+    min-height: 400px;
+    overflow: auto;
+    width: 58%;
+    display: inline-block;
+    background-color: rgb(29, 46, 60);
+}
+
+#dialog-text {
+    min-height: 400px;
+    overflow: auto;
+    width: 40%;
+    display: inline-block;
+    background-color: rgb(75, 47, 47);
+}
+
+.command-input {
+    border-left: 0px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 2px solid var(--text-color);
 }
 
 #login-box {
