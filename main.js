@@ -53,7 +53,7 @@ var game_screen
 
 // Always Top
 var conn_status_display
-var ingame_as
+var ingame_as_display
 
 // Login
 var login_button
@@ -73,6 +73,8 @@ var loc_creature
 var command_input
 var main_text
 
+
+var ingame = false
 var characters = []
 var ingame_character = {}
 var selected_character
@@ -347,8 +349,11 @@ function location_update() {
 }
 
 function enter_world(websocket, package) {    
+    ingame = true
     submit_character_button.disabled = true
     ingame_character = package.charsheet
+    ingame_as_display.innerHTML = ingame_character.name
+
     command_input.addEventListener('keyup', submit_command)
     
     show_game_screen();
@@ -360,13 +365,17 @@ function enter_world(websocket, package) {
     let messages = package.messages
     messages.forEach(function(message) {
         display_main_text(message);
-    });
-    
+    });    
 }
 
 function exit_world() {
     // Deactive command input
     console.log('exiting world')
+    if (ingame==true){
+        var date = new Date()            
+        display_main_text([`Left world at ${date.toLocaleTimeString()}`]);
+        ingame=false
+    }
     command_input.removeEventListener('keyup', submit_command)
 }
 
@@ -489,8 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Connection closed
         websocket.addEventListener('close', function (event) {
-            var date = new Date()            
-            display_main_text([`Disconnected at ${date.toLocaleTimeString()}`])
             conn_status_display.innerHTML = "Not Connected"
             conn_status_display.style.color = 'rgb(255, 122, 135)'
             logout_button.disabled = true;
