@@ -78,6 +78,8 @@ var ingame = false
 var characters = []
 var ingame_character = {}
 var selected_character
+var command_history = []
+var command_history_index = 0
 
 
 function display_main_text(messages) {
@@ -129,7 +131,7 @@ function listen_for_broadcasts(websocket) {
                     update_charsheet(broadcast)
                     break
 
-                case "main_text_messages":
+                case "messages":
                     display_main_text(broadcast.messages)
                     break
 
@@ -156,7 +158,9 @@ function show_game_screen(websocket) {
 
 // Surely, the use of this function to check for "Enter" keyup is not optimal
 function submit_command(e) {
-    if (e.code === "Enter") {
+    if (e.key === "Enter") {
+        command_history.push(command_input.value)
+        command_history_index = 0;
         command = parse_command(command_input.value)
         // if command valid
         command_input.value = ""
@@ -167,6 +171,37 @@ function submit_command(e) {
                 "command": command,
             }
             send_transmission(websocket, transmission)
+        }
+    }
+    else if (e.key === "ArrowUp") {
+        console.log("up arrow pressed");
+        console.log(command_history)
+        console.log(command_history.length)
+        console.log(command_history_index)
+        console.log(Math.abs(command_history_index))
+        if (Math.abs(command_history_index) != command_history.length) {
+            console.log('more to go')
+            command_history_index -= 1;
+            console.log(command_history_index)
+            command_input.value = command_history[command_history.length + command_history_index];
+        }
+    }        
+    else if (e.key === "ArrowDown") {
+        console.log("down arrow pressed");
+        console.log(command_history)
+        console.log(command_history.length)
+        console.log(command_history_index)
+        console.log(Math.abs(command_history_index))
+        if (command_history_index === 0) {
+            command_input.value = ""
+        }
+        else if (command_history_index === -1) {
+            command_history_index += 1;
+            command_input.value = ""
+        }
+        else {
+            command_history_index += 1;
+            command_input.value = command_history[command_history.length + command_history_index]
         }
     }
 }
