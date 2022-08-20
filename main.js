@@ -93,7 +93,7 @@ function display_main_text(messages) {
 
     // Could remove content past a certain size to a buffer / storage zone
     // In other words limit the scrollable area but keep the excess handy
-
+    // Should interpret 
     // Should interpret 
     // Ex 
     // You start walking north >
@@ -122,7 +122,7 @@ function listen_for_broadcasts(websocket) {
 
                 case "location_update":
                     ingame_character.location = broadcast.location_data
-                    location_update(broadcast)
+                    location_update()
                     break
                 
                 case "charsheet":
@@ -143,14 +143,10 @@ function listen_for_broadcasts(websocket) {
     });
 }
 
-
-
 // Transmissions are game related
 function send_transmission(websocket, transmission) {
     websocket.send(JSON.stringify(transmission));
 }
-
-
 
 function show_game_screen(websocket) {
     // Setup
@@ -329,15 +325,40 @@ function show_welcome_screen(websocket) {
 function location_update() {
     // show generic in italics, name more noticeable 
     // terrain indicated by...? color? image? small label? color + small side label?
+    
+    // Could do functions for each component
 
     loc = ingame_character.location
     loc_title.innerHTML = `${loc.name} ${loc.generic}, Region of ${loc.region}`;
     loc_phys_dsc.innerHTML = loc.phys_dsc;
+
     // loc_items.innerHTML = loc.items;
-    // loc_denizens.innerHTML = loc.people
     
-    // debugging
-    console.log(`current location xy: ${loc.x}, ${loc.y}`)
+    // Denizens
+    // Short lists of all denizens types can be combined, long lists described in their own sentence
+
+    // Diff types can use same sentence writing functions
+    loc.people = loc.people.filter(d => d != ingame_character.name)
+
+    if (loc.people.length == 0) {
+        loc_people.innerHTML = "You are the only one here."
+    }
+
+    else if (loc.people.length > 1) {
+        loc_people.innerHTML = `Among people, ${articulate_people(loc.people)} are here.`
+    }
+
+    else if (loc.people.length === 1) {
+        loc_people.innerHTML = `${loc.people[0]} is the only other person here.`
+    }
+
+    else if (loc.people.length > 10) {
+        loc_people.innerHTML = "There are many people here."
+    }
+
+    else if (loc.people.length > 30) {
+        loc_people.innerHTML = "There are a great many people here."
+    }
 
     // populate exits div
 
@@ -363,6 +384,23 @@ function location_update() {
             
 }
 
+function articulate_people(people) {
+
+    if (people.length === 2) {
+        return `${people[1]} and ${people[2]}`
+    }
+
+    else {
+        // more than 2 people will need commas    
+        // loop through to last, give them each a comma and space
+        var with_commas = ""
+        for (let i=0; i<people.length-1; i++) {
+            with_commas.concat(`${people[i]}, `);
+        }
+        return `${with_commas}and ${people[-1]}`
+    }
+}
+
 function enter_world(websocket, package) {    
     var date = new Date()  
     display_main_text([`Joined world at ${date.toLocaleTimeString()}`]);
@@ -371,10 +409,10 @@ function enter_world(websocket, package) {
     ingame_character = package.charsheet
     ingame_as_display.innerHTML = ingame_character.name
 
-    command_input.addEventListener('keyup', submit_command)
+    command_input.addEventListener('keyup', submit_command);
     
     show_game_screen();
-    location_update();
+    location_update()
     
     // Activate command input
     
